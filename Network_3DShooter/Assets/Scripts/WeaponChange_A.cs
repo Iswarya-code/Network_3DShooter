@@ -14,6 +14,7 @@ public class WeaponChange_A : MonoBehaviour
     public Transform[] rightTargets;
     public GameObject[] weapons;
     int weaponNumber = 0;
+    GameObject TestForWeapons;
 
     CinemachineVirtualCamera cam;
     GameObject camObject;
@@ -36,6 +37,13 @@ public class WeaponChange_A : MonoBehaviour
         {
             this.gameObject.GetComponent<PlayerMovement>().enabled = false;
         }
+
+        TestForWeapons = GameObject.Find("Weapon1 PickUp(Clone)");
+        if(TestForWeapons == null)
+        {
+            var spawner = GameObject.Find("SpawnScripts");
+            spawner.GetComponent<SpawnCharacters>().SpwanWeaponsStart();
+        }
     }
 
    /* void SetLookAt()
@@ -55,9 +63,10 @@ public class WeaponChange_A : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) && this.gameObject.GetComponent<PhotonView>().IsMine == true)
         {
-            weaponNumber++;
+            // weaponNumber++;
+            this.GetComponent<PhotonView>().RPC("Change", RpcTarget.AllBuffered);
             if(weaponNumber>weapons.Length -1)
             {
                 weaponNumber = 0;
@@ -73,5 +82,24 @@ public class WeaponChange_A : MonoBehaviour
 
 
         }
+    }
+
+    [PunRPC]
+
+    public void Change()
+    {
+         weaponNumber++;
+        if (weaponNumber > weapons.Length - 1)
+        {
+            weaponNumber = 0;
+        }
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            weapons[i].SetActive(false);
+        }
+        weapons[weaponNumber].SetActive(true);
+        leftHand.data.target = leftTargets[weaponNumber];
+        rightHand.data.target = rightTargets[weaponNumber];
+        rig.Build();
     }
 }

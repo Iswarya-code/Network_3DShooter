@@ -8,6 +8,10 @@ public class SpawnCharacters : MonoBehaviour
     public GameObject character;
     public Transform[] spawnPoints;
 
+    public GameObject[] Weapons;
+    public Transform[] WeaponSpawnPoints;
+    public float WeaponRespawnTime = 10f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +25,13 @@ public class SpawnCharacters : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SpwanWeaponsStart()
+    {
+        for(int i=0;i<Weapons.Length;i++)
+        {
+            PhotonNetwork.Instantiate(Weapons[i].name, WeaponSpawnPoints[i].position, WeaponSpawnPoints[i].rotation);
+        }
     }
 }
