@@ -12,10 +12,16 @@ public class LobbyScript : MonoBehaviourPunCallbacks
     TypedLobby teamBattle = new TypedLobby("teamBattle", LobbyType.Default);
     TypedLobby noRespawn = new TypedLobby("noRespawn", LobbyType.Default);
 
-    public Text roomNumber;
+    public GameObject roomNumber;
     string LevelName = "";
+
+    private void Start()
+    {
+        roomNumber.SetActive(false);
+    }
     public void BackToMenu()
     {
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -54,7 +60,7 @@ public class LobbyScript : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        roomNumber.text = PhotonNetwork.CurrentRoom.Name;
+        roomNumber.SetActive(true);
         PhotonNetwork.LoadLevel(LevelName);
     }
 }
