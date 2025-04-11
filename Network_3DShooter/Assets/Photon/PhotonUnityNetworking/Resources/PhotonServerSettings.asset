@@ -48,6 +48,10 @@ MonoBehaviour:
   - AssignColor
   - Count
   - RemoveMe
+  - PlaySound
+  - GunMuzzleFlash
+  - MuzzleFalshOfff
+  - MuzzleFalshOff
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

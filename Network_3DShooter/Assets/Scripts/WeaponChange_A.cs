@@ -27,6 +27,7 @@ public class WeaponChange_A : MonoBehaviour
     Text ammoAmtText;
     public Sprite[] weaponIcons;
     public int[] ammoAmts;
+    public GameObject[] muzzleFalsh; 
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +74,16 @@ public class WeaponChange_A : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetMouseButtonDown(0))
+        {
+            if(this.GetComponent<PhotonView>().IsMine == true)
+            {
+                GetComponent<DisplayColor>().PlayGunShot(GetComponent<PhotonView>().Owner.NickName, weaponNumber);
+                this.GetComponent<PhotonView>().RPC("GunMuzzleFlash", RpcTarget.All);
+               
+            }
+        }
+
         if(Input.GetMouseButtonDown(1) && this.gameObject.GetComponent<PhotonView>().IsMine == true)
         {
             // weaponNumber++;
@@ -100,6 +111,13 @@ public class WeaponChange_A : MonoBehaviour
     }
 
     [PunRPC]
+    public void GunMuzzleFlash()
+    {
+        muzzleFalsh[weaponNumber].SetActive(true);
+        StartCoroutine(MuzzleOff());
+    }
+
+    [PunRPC]
 
     public void Change()
     {
@@ -116,5 +134,18 @@ public class WeaponChange_A : MonoBehaviour
         leftHand.data.target = leftTargets[weaponNumber];
         rightHand.data.target = rightTargets[weaponNumber];
         rig.Build();
+    }
+
+    IEnumerator MuzzleOff()
+    {
+        yield return new WaitForSeconds(0.03f);
+        this.GetComponent<PhotonView>().RPC("MuzzleFalshOff", RpcTarget.All);
+       
+    }
+
+    [PunRPC]
+    public void MuzzleFalshOff()
+    {
+        muzzleFalsh[weaponNumber].SetActive(false);
     }
 }

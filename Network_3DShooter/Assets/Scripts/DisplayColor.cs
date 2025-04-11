@@ -13,6 +13,8 @@ public class DisplayColor : MonoBehaviourPunCallbacks
     GameObject namesObject;
     GameObject waitForPlayers;
 
+    public AudioClip[] gunShotSounds;
+
     private void Start()
     {
         namesObject = GameObject.Find("NamesBG");
@@ -44,6 +46,26 @@ public class DisplayColor : MonoBehaviourPunCallbacks
     public void ChooseColor()
     {
         GetComponent<PhotonView>().RPC("AssignColor", RpcTarget.AllBuffered);
+    }
+
+    //play audio when gunshot
+    public void PlayGunShot(string name, int weaponNumber)
+    {
+        GetComponent<PhotonView>().RPC("PlaySound", RpcTarget.All, name, weaponNumber);
+    }
+
+    [PunRPC]
+    
+    public void PlaySound(string name, int weaponNumber)
+    {
+        for(int i=0; i< namesObject.GetComponent<NickNameScript>().names.Length; i++)
+        {
+            if(name == namesObject.GetComponent<NickNameScript>().names[i].text)
+            {
+                GetComponent<AudioSource>().clip = gunShotSounds[weaponNumber];
+                GetComponent<AudioSource>().Play();
+            }
+        }
     }
 
     [PunRPC]
