@@ -33,6 +33,22 @@ public class DisplayColor : MonoBehaviourPunCallbacks
         }
     }
 
+    public void DeliverDamage(string name, float damageAmt)
+    {
+        GetComponent<PhotonView>().RPC("GunDamage", RpcTarget.AllBuffered, name, damageAmt);
+    }
+    [PunRPC]
+    public void GunDamage(string name, float damageAmt)
+    {
+        for(int i=0;i<namesObject.GetComponent<NickNameScript>().name.Length; i++)
+        {
+            if(name == namesObject.GetComponent<NickNameScript>().names[i].text)
+            {
+                namesObject.GetComponent<NickNameScript>().healthBars[i].gameObject.GetComponent<Image>().fillAmount -= damageAmt;
+            }
+        }
+    }
+
     void RemoveData()
     {
         GetComponent<PhotonView>().RPC("RemoveMe", RpcTarget.AllBuffered);

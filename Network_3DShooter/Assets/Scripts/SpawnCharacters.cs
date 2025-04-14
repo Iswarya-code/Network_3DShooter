@@ -15,10 +15,11 @@ public class SpawnCharacters : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(PhotonNetwork.IsConnected)
-        {
-            PhotonNetwork.Instantiate(character.name, spawnPoints[PhotonNetwork.CurrentRoom.PlayerCount - 1].position, spawnPoints[PhotonNetwork.CurrentRoom.PlayerCount - 1].rotation);
-        }
+        /* if(PhotonNetwork.IsConnected)
+         {
+             PhotonNetwork.Instantiate(character.name, spawnPoints[PhotonNetwork.CurrentRoom.PlayerCount - 1].position, spawnPoints[PhotonNetwork.CurrentRoom.PlayerCount - 1].rotation);
+         }*/
+        StartCoroutine(WaitToSpawn());
     }
 
     // Update is called once per frame
@@ -33,5 +34,11 @@ public class SpawnCharacters : MonoBehaviour
         {
             PhotonNetwork.Instantiate(Weapons[i].name, WeaponSpawnPoints[i].position, WeaponSpawnPoints[i].rotation);
         }
+    }
+
+    IEnumerator WaitToSpawn()
+    {
+        yield return new WaitForSeconds(1);
+        PhotonNetwork.Instantiate(character.name, spawnPoints[PhotonNetwork.CurrentRoom.PlayerCount - 1].position, spawnPoints[PhotonNetwork.CurrentRoom.PlayerCount - 1].rotation);
     }
 }
