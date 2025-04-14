@@ -15,7 +15,7 @@ public class LookAt : MonoBehaviour
     void FixedUpdate()
     {
         screenPosition = Input.mousePosition;
-        screenPosition.z = 3f;
+        screenPosition.z = 6f;
 
         worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
         transform.position = worldPosition;

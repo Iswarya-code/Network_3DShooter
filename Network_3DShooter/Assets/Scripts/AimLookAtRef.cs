@@ -6,6 +6,7 @@ using Photon.Pun;
 public class AimLookAtRef : MonoBehaviour
 {
     GameObject lookAtObject;
+    public bool isDead = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +16,7 @@ public class AimLookAtRef : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(this.gameObject.GetComponent<PhotonView>().IsMine == true)
+        if(this.gameObject.GetComponent<PhotonView>().IsMine == true && isDead == false)
         {
             this.transform.position = lookAtObject.transform.position;
         }

@@ -33,6 +33,7 @@ public class WeaponChange_A : MonoBehaviour
     string shooterName;
     string gotShotName;
     public float[] damageAmts;
+    public bool isDead = false;
 
 
     // Start is called before the first frame update
@@ -58,8 +59,12 @@ public class WeaponChange_A : MonoBehaviour
         TestForWeapons = GameObject.Find("Weapon1 PickUp(Clone)");
         if(TestForWeapons == null)
         {
-            var spawner = GameObject.Find("SpawnScripts");
-            spawner.GetComponent<SpawnCharacters>().SpwanWeaponsStart();
+            if(this.gameObject.GetComponent<PhotonView>().Owner.IsMasterClient == true)
+            {
+                var spawner = GameObject.Find("SpawnScripts");
+                spawner.GetComponent<SpawnCharacters>().SpwanWeaponsStart();
+            }
+           
         }
     }
 
@@ -80,7 +85,7 @@ public class WeaponChange_A : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && isDead == false)
         {
             if(this.GetComponent<PhotonView>().IsMine == true)
             {
@@ -97,7 +102,7 @@ public class WeaponChange_A : MonoBehaviour
                     }
                     if(hit.transform.gameObject.GetComponent<DisplayColor>() != null)
                     {
-                        hit.transform.gameObject.GetComponent<DisplayColor>().DeliverDamage(hit.transform.gameObject.GetComponent<PhotonView>().Owner.NickName, damageAmts[weaponNumber]);
+                        hit.transform.gameObject.GetComponent<DisplayColor>().DeliverDamage(this.GetComponent<PhotonView>().Owner.NickName, hit.transform.gameObject.GetComponent<PhotonView>().Owner.NickName, damageAmts[weaponNumber]);
 
                     }
                     shooterName = GetComponent<PhotonView>().Owner.NickName;
@@ -107,7 +112,7 @@ public class WeaponChange_A : MonoBehaviour
             }
         }
 
-        if(Input.GetMouseButtonDown(1) && this.gameObject.GetComponent<PhotonView>().IsMine == true)
+        if(Input.GetMouseButtonDown(1) && this.gameObject.GetComponent<PhotonView>().IsMine == true && isDead == false)
         {
             // weaponNumber++;
             this.GetComponent<PhotonView>().RPC("Change", RpcTarget.AllBuffered);

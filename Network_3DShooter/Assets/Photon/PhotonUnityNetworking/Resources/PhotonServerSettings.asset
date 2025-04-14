@@ -53,6 +53,9 @@ MonoBehaviour:
   - MuzzleFalshOfff
   - MuzzleFalshOff
   - GunDamage
+  - DisplayMessage
+  - MessageOFF
+  - ResetForReplay
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

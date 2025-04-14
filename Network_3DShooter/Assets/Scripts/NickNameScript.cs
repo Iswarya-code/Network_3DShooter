@@ -9,10 +9,15 @@ public class NickNameScript : MonoBehaviourPunCallbacks
     public Text[] names;
     public Image[] healthBars;
     GameObject waitObject;
+    public GameObject displayPanel;
+    public Text messageText;
+    public int[] kills;
 
     private void Start()
     {
-        for(int i=0; i<names.Length;i++)
+        displayPanel.SetActive(false);
+
+        for (int i=0; i<names.Length;i++)
         {
             names[i].gameObject.SetActive(false);
             healthBars[i].gameObject.SetActive(false);
@@ -43,6 +48,40 @@ public class NickNameScript : MonoBehaviourPunCallbacks
         StartCoroutine(ToLobby());
     }
 
+    public void RunMessage(string win, string lose)
+    {
+        this.GetComponent<PhotonView>().RPC("DisplayMessage", RpcTarget.All, win, lose);
+        UpdateKills(win);
+    }
+
+    void UpdateKills(string win)
+    {
+        for(int i =0; i <names.Length;i++)
+        {
+            if(win == names[i].text)
+            {
+                kills[i]++;
+            }
+        }
+    }
+    [PunRPC]
+    void DisplayMessage(string win, string lose)
+    {
+        displayPanel.SetActive(true);
+        messageText.text = win + " killed " + lose;
+        StartCoroutine(SwitchOffMessage());
+    }
+
+    IEnumerator SwitchOffMessage()
+    {
+        yield return new WaitForSeconds(3);
+        this.GetComponent<PhotonView>().RPC("MessageOFF", RpcTarget.All);
+    }
+    [PunRPC]
+    void MessageOFF()
+    {
+        displayPanel.SetActive(false);
+    }
     IEnumerator ToLobby()
     {
         yield return new WaitForSeconds(0.1f);
