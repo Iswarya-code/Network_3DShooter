@@ -10,6 +10,9 @@ public class Timer : MonoBehaviour
     public Text secondsText;
     public int minutes = 4;
     public int seconds = 59;
+    public GameObject Canvas;
+    [HideInInspector]
+    public bool timeStop = false;
 
     public void BeginTimer()
     {
@@ -48,6 +51,13 @@ public class Timer : MonoBehaviour
             seconds = 59;
             minutesText.text = minutes.ToString();
             secondsText.text = seconds.ToString();
+        }
+        if(seconds ==0 && minutes <=0)
+        {
+            Canvas.GetComponent<KillCount>().countDown = false;
+            Canvas.GetComponent<KillCount>().TimeOver();
+            timeStop = true;
+
         }
     }
 }

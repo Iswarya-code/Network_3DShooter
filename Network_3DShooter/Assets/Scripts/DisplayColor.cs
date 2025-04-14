@@ -19,6 +19,7 @@ public class DisplayColor : MonoBehaviourPunCallbacks
     {
         namesObject = GameObject.Find("NamesBG");
         waitForPlayers = GameObject.Find("WaitingBG");
+        InvokeRepeating("CheckTime", 1, 1);
     }
 
     private void Update()
@@ -37,6 +38,17 @@ public class DisplayColor : MonoBehaviourPunCallbacks
         }
     }
 
+    void CheckTime()
+    {
+        if(namesObject.GetComponent<Timer>().timeStop==true)
+        {
+            this.gameObject.GetComponent<PlayerMovement>().isDead = true;
+            this.gameObject.GetComponent<PlayerMovement>().gameOver = true;
+            this.gameObject.GetComponent<WeaponChange_A>().isDead = true;
+            this.gameObject.GetComponentInChildren<AimLookAtRef>().isDead = true;
+            this.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        }
+    }
     public void Respawn(string name)
     {
         GetComponent<PhotonView>().RPC("ResetForReplay", RpcTarget.AllBuffered,name);
@@ -96,7 +108,7 @@ public class DisplayColor : MonoBehaviourPunCallbacks
    
     void RoomExit()
     {
-
+        StartCoroutine(GetReadyToLeave());
     }
     public void ChooseColor()
     {

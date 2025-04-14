@@ -1409,8 +1409,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf5c82d6d7088b4ba93acfc4d01c5ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reSpawnTime: 60
+  reSpawnTime: 40
   WeaponType: 2
+  ammoRefillamt: 30
 --- !u!1 &3670273743241488069
 GameObject:
   m_ObjectHideFlags: 0

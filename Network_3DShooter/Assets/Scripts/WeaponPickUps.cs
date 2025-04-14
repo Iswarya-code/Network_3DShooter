@@ -9,6 +9,7 @@ public class WeaponPickUps : MonoBehaviour
     public float reSpawnTime = 5;
 
     public int WeaponType = 1;
+    public int ammoRefillamt = 60;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,8 @@ public class WeaponPickUps : MonoBehaviour
         {
             this.GetComponent<PhotonView>().RPC("PlayerPickUpAudio", RpcTarget.All);
             this.GetComponent<PhotonView>().RPC("TurnOff", RpcTarget.All);
-
+            other.GetComponent<WeaponChange_A>().ammoAmts[WeaponType - 1] += ammoRefillamt;
+            other.GetComponent<WeaponChange_A>().UpdatePickUp();
         }
     }
 

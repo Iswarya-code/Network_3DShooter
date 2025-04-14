@@ -11,18 +11,22 @@ public class KillCount : MonoBehaviour
     GameObject killCountPanel;
     GameObject namesObject;
     bool killCountOn = false;
+    public bool countDown = true;
+    public GameObject winnerPanel;
+    public Text winnerText;
     // Start is called before the first frame update
     void Start()
     {
         killCountPanel = GameObject.Find("KillCountPanel");
         namesObject = GameObject.Find("NamesBG");
         killCountPanel.SetActive(false);
+        winnerPanel.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.K))
+        if(Input.GetKeyDown(KeyCode.K) && countDown == true)
         {
             if (killCountOn == false)
             {
@@ -56,5 +60,32 @@ public class KillCount : MonoBehaviour
             }
         }
         
+    }
+
+    public void TimeOver()
+    {
+        killCountPanel.SetActive(true);
+        winnerPanel.SetActive(true);
+        killCountOn = true;
+        highestKills.Clear();
+        for (int i = 0; i < names.Length; i++)
+        {
+            highestKills.Add(new Kills(namesObject.GetComponent<NickNameScript>().names[i].text, namesObject.GetComponent<NickNameScript>().kills[i]));
+        }
+        highestKills.Sort();
+        winnerText.text = highestKills[0].playerName;
+        for (int i = 0; i < names.Length; i++)
+        {
+            names[i].text = highestKills[i].playerName;
+            killamts[i].text = highestKills[i].playerKills.ToString();
+        }
+        for (int i = 0; i < names.Length; i++)
+        {
+            if (names[i].text == "Name")
+            {
+                names[i].text = "";
+                killamts[i].text = "";
+            }
+        }
     }
 }
