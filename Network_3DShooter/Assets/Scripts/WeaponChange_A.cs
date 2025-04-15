@@ -117,7 +117,7 @@ public class WeaponChange_A : MonoBehaviour
 
                     }
                     shooterName = GetComponent<PhotonView>().Owner.NickName;
-                    Debug.Log(gotShotName + " got hit by " + shooterName);
+                   // Debug.Log(gotShotName + " got hit by " + shooterName);
                 }
                 this.gameObject.layer = LayerMask.NameToLayer("Default");
             }

@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     bool reSpawned = false;
     GameObject respawnPanel;
     public bool gameOver = false;
+    public bool noRespawn;
+    //last one standing
+    bool startChecking = false;
+    GameObject canvas;
 
 
     // Start is called before the first frame update
@@ -26,6 +30,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         startPos = transform.position;
         respawnPanel = GameObject.Find("RespawnPanel");
+        canvas = GameObject.Find("Canvas");
     }
 
     // Update is called once per frame
@@ -60,12 +65,30 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (isDead == true && reSpawned == false && gameOver == false)
+        if (isDead == true && reSpawned == false && gameOver == false && noRespawn == false)
         {
             reSpawned = true;
             respawnPanel.SetActive(true);
             respawnPanel.GetComponent<RespawnTimer>().enabled = true;
             StartCoroutine(RespawnWait());
+        }
+        if (isDead == true && reSpawned == false && gameOver == false && noRespawn == true)
+        {
+            reSpawned = true;
+            GetComponent<DisplayColor>().NoRespawnExit();
+        }
+        if (PhotonNetwork.CurrentRoom.PlayerCount > 1 && startChecking == false)
+        {
+            startChecking = true;
+            InvokeRepeating("CheckForWinner", 3, 3);
+        }
+    }
+
+    void CheckForWinner()
+    {
+        if(PhotonNetwork.CurrentRoom.PlayerCount ==1 && noRespawn == true)
+        {
+            canvas.GetComponent<KillCount>().NoRespawnWinner(GetComponent<PhotonView>().Owner.NickName);
         }
     }
 

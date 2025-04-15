@@ -9,17 +9,26 @@ public class DisplayColor : MonoBehaviourPunCallbacks
     public int[] buttonNumbers;
     public int[] viewID;
     public Color32[] colors;
+    //for team battle
+    public Color32[] teamColors;
+    bool teamMode = false;
 
     GameObject namesObject;
     GameObject waitForPlayers;
 
     public AudioClip[] gunShotSounds;
 
+    //no respawn scene
+    bool isRespawn = false;
+
     private void Start()
     {
         namesObject = GameObject.Find("NamesBG");
         waitForPlayers = GameObject.Find("WaitingBG");
         InvokeRepeating("CheckTime", 1, 1);
+        teamMode = namesObject.GetComponent<NickNameScript>().teamMode;
+        isRespawn = namesObject.GetComponent<NickNameScript>().noRespawn;
+        GetComponent<PlayerMovement>().noRespawn = isRespawn;
     }
 
     private void Update()
@@ -38,6 +47,11 @@ public class DisplayColor : MonoBehaviourPunCallbacks
         }
     }
 
+    public void NoRespawnExit()
+    {
+        namesObject.GetComponent<NickNameScript>().eliminationPanel.SetActive(true);
+        StartCoroutine(WaitToExit());
+    }
     void CheckTime()
     {
         if(namesObject.GetComponent<Timer>().timeStop==true)
@@ -140,13 +154,27 @@ public class DisplayColor : MonoBehaviourPunCallbacks
     {
         for(int i=0; i<viewID.Length; i++)
         {
-            if(this.GetComponent<PhotonView>().ViewID == viewID[i])
+            if(teamMode == false)
             {
-                this.transform.GetChild(1).GetComponent<Renderer>().material.color = colors[i];
-                namesObject.GetComponent<NickNameScript>().names[i].gameObject.SetActive(true);
-                namesObject.GetComponent<NickNameScript>().healthBars[i].gameObject.SetActive(true);
-                namesObject.GetComponent<NickNameScript>().names[i].text = this.GetComponent<PhotonView>().Owner.NickName;
+                if (this.GetComponent<PhotonView>().ViewID == viewID[i])
+                {
+                    this.transform.GetChild(1).GetComponent<Renderer>().material.color = colors[i];
+                    namesObject.GetComponent<NickNameScript>().names[i].gameObject.SetActive(true);
+                    namesObject.GetComponent<NickNameScript>().healthBars[i].gameObject.SetActive(true);
+                    namesObject.GetComponent<NickNameScript>().names[i].text = this.GetComponent<PhotonView>().Owner.NickName;
+                }
             }
+            else if(teamMode == true)
+            {
+                if (this.GetComponent<PhotonView>().ViewID == viewID[i])
+                {
+                    this.transform.GetChild(1).GetComponent<Renderer>().material.color = teamColors[i];
+                    namesObject.GetComponent<NickNameScript>().names[i].gameObject.SetActive(true);
+                    namesObject.GetComponent<NickNameScript>().healthBars[i].gameObject.SetActive(true);
+                    namesObject.GetComponent<NickNameScript>().names[i].text = this.GetComponent<PhotonView>().Owner.NickName;
+                }
+            }
+           
         }
     }
 
@@ -176,5 +204,12 @@ public class DisplayColor : MonoBehaviourPunCallbacks
     {
         yield return new WaitForSeconds(0.03f);
         this.GetComponent<Animator>().SetBool("Hit", false);
+    }
+
+    IEnumerator WaitToExit()
+    {
+        yield return new WaitForSeconds(3);
+        RemoveMe();
+        RoomExit();
     }
 }

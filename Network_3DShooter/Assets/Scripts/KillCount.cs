@@ -88,4 +88,10 @@ public class KillCount : MonoBehaviour
             }
         }
     }
+
+    public void NoRespawnWinner(string name)
+    {
+        winnerPanel.SetActive(true);
+        winnerText.text = name;
+    }
 }

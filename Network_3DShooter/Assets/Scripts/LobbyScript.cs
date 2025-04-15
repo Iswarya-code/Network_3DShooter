@@ -27,20 +27,20 @@ public class LobbyScript : MonoBehaviourPunCallbacks
 
     public void JoinGameKillCount()
     {
-        LevelName = "Floor layout";
+        LevelName = "KillCount";
         PhotonNetwork.JoinLobby(killCount);
     }
 
     public void JoinGameTeamBattle()
     {
-        LevelName = "Floor layout";
+        LevelName = "TeamBattle";
         PhotonNetwork.JoinLobby(teamBattle);
 
     }
 
     public void JoinGameNoRespawn()
     {
-        LevelName = "Floor layout";
+        LevelName = "NoRespawn";
         PhotonNetwork.JoinLobby(noRespawn);
 
     }
@@ -52,7 +52,7 @@ public class LobbyScript : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Debug.Log("Joined random room failed, creating a new room");
+       // Debug.Log("Joined random room failed, creating a new room");
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 6;
         PhotonNetwork.CreateRoom("Arena" + Random.Range(1, 1000), roomOptions);
